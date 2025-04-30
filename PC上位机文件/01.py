@@ -69,22 +69,28 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             print(f"连接失败: {e}")
             return
         self.buffer = b""
+        self.chunk = b""
         while True:
-            try:
-                self.buffer = self.client_socket.recv(1024)
-                if not self.buffer:
-                    print("连接中断 断开服务")
-                    break
-                while b"END" not in self.buffer: #END是结束标识符
-                    # print("buffer",self.buffer)
-                    self.buffer += self.client_socket.recv(1024)
-                response = self.buffer.replace(b"END", b"").decode("utf-8")
-                self.buffer = b""
-                print("Ds:",response)
-                self.response_received.emit(response)  # 跨线程发出信号 子线程不可调用GUI组件
-            except Exception as e:
-                print("接受失败：",e)
+            self.client_socket.settimeout(None)  # 超时一损俱损 第一个进行超时豁免
+            self.buffer = self.client_socket.recv(1024)
+            if not self.buffer:
+                print("连接中断 断开服务")
                 break
+            while True:  # END是结束标识符
+                try:
+                    self.buffer += self.chunk
+                    if b"END" in self.buffer:
+                        break
+                    self.client_socket.settimeout(6)
+                    self.chunk = self.client_socket.recv(124)
+                except socket.timeout:
+                    print("超时，强制结束接收")
+                    break
+
+            response = self.buffer.replace(b"END", b"").decode("utf-8", errors="ignore")
+            self.buffer = b""
+            print("Ds:", response,len(response))
+            self.response_received.emit(response)  # 跨线程发出信号 子线程不可调用GUI组件
 
     def display_received_message(self, response):
         #之所以要多此一举 是因为子线程不可修改GUI组件 表现为 服务器回传信息不会打印，所以采用主线程调用的方式
