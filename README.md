@@ -1,4 +1,6 @@
 # ESP32-Deepseek-TCP-Onenet
+
+ESP32 使用5.0-Idf
 使用ESP作为一个服务中转站 实现 电脑上的qt上位机与deepseek聊天对话  你需要更换一下你自己的API以及IP即可 主要感谢GPT的帮助。
 ESP文件夹的内容 是烧录到ESP32中 上位机文件夹则是pycharm中使用。
 这里我解释一下因为我是用的手机热点，来使ESP32与电脑联网，因此需要电脑CMD 输入configip查询手机热点分配的IP地址，所有设备都在这个IP地址下才可以通讯。
