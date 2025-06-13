@@ -11,7 +11,7 @@
 #define ONENET_PRODUCT_ID "25UkgjsmFS"    
 
 //ds秘钥 此处为私钥 
-#define DEEPSEEK_API_KEY "Bearer sk-3b261465426c4899bb50f3e00978cf89"  //这里替换为你的API
+#define DEEPSEEK_API_KEY "YOUR API OF Deepseek"  //这里替换为你的API
 #define DEEPSEEK_API_URL "https://api.deepseek.com/v1/chat/completions" //Deepseek
 #define MAX_OUTPUT_BUFFER_LEN  4096
 
